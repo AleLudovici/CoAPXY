@@ -1,0 +1,63 @@
+<html>
+<head>
+<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+
+<script type="text/javascript">
+
+    var counter = 0;
+
+    $(document).ready(function() {
+        //$('#content').append('hola');
+    });
+
+    function http_test() {
+        var post = '';
+        $.ajax({
+            url: "",
+            type: "get",
+            data: post,
+            dataType: "html",
+            success: function(result){
+                var info = $('#http_result');
+                info.empty();
+                info.append(result);
+            }
+        });
+            
+    }
+
+    function startTimer() {
+        var t=setTimeout("websocket()",3000);
+    }
+
+    function websocket() {
+        var s = new WebSocket("ws://192.168.23.1:9000");
+        s.onopen = function(e) { alert("opened"); }
+        s.onclose = function(e) { alert("closed"); }
+        s.onmessage = function(e) { 
+            alert("got: " + e.data); 
+            $('#content').append(e.data+'<br />');
+            counter++;
+            $('#counter').html(counter);
+            var t=setTimeout("websocket()",3000);
+        }
+    }
+</script>
+</head>
+<body>
+<div id="main">
+    <h1>Live data</h1>
+
+     <h2>HTTP Connection test</h2>
+     <a href="javascript:http_test();">Start test</a><br /><br />Response: <br />
+     <div id="http_result" class="info_http"></div>
+
+     <h2>Websocket Connection test</h2>
+     <a href="javascript:websocket();">Start test</a>
+
+    <div id="counter"></div>
+
+    <div id="content"></div>
+</div>
+</body>
+</html>
